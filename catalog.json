@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "updated": "2026-11-09",
+  "categories": [
+    {"id": "fun", "name": "Развлечения"},
+    {"id": "games", "name": "Игры и эмуляторы"},
+    {"id": "stream", "name": "Стриминг с ПК"},
+    {"id": "utils", "name": "Утилиты"}
+  ],
+  "apps": [
+    {
+      "id": "firefox", "name": "Firefox", "category": "fun",
+      "summary": "Браузер", "description": "Firefox ESR на весь экран. Стик — курсор, A — клик, Select — экранная клавиатура. Тяжёлые сайты будут медленными.",
+      "icon": "icons/firefox.png", "size_mb": 260,
+      "install": {"type": "apt", "packages": ["firefox-esr", "cage", "wvkbd", "fonts-dejavu-core"]},
+      "run": {"mode": "kiosk", "cmd": "firefox-esr --kiosk https://ya.ru", "input": "mouse"}
+    },
+    {
+      "id": "yandex-music", "name": "Яндекс Музыка", "category": "fun",
+      "summary": "Музыка и скачивание треков", "description": "Свой клиент в стиле оболочки: вход по токену, плейлисты, поиск, скачивание треков на карту для прослушивания без интернета.",
+      "icon": "icons/yandex-music.png", "size_mb": 30, "status": "soon",
+      "install": {"type": "script", "script": "scripts/yandex-music.sh"},
+      "run": {"mode": "game", "cmd": "nk-ymusic", "input": "gamepad"}
+    },
+    {
+      "id": "mpv", "name": "Видеоплеер", "category": "fun",
+      "summary": "Фильмы и сериалы с карты", "description": "mpv: смотреть видеофайлы из папки videos на карте. Аппаратное декодирование, субтитры, управление с геймпада.",
+      "icon": "icons/mpv.png", "size_mb": 40,
+      "install": {"type": "apt", "packages": ["mpv"]},
+      "run": {"mode": "game", "cmd": "mpv --fs --input-gamepad=yes --vo=gpu --gpu-context=drm /mnt/sdcard/videos", "input": "gamepad"}
+    },
+    {
+      "id": "portmaster", "name": "PortMaster", "category": "games",
+      "summary": "Сотни портов игр для приставок", "description": "Каталог готовых портов игр под ARM-приставки (многие поддерживают RK3566). Часть игр требует файлы оригинала.",
+      "icon": "icons/portmaster.png", "size_mb": 60, "status": "beta",
+      "install": {"type": "script", "script": "scripts/portmaster.sh"},
+      "run": {"mode": "game", "cmd": "/mnt/sdcard/nk/apps/portmaster/run.sh", "input": "gamepad"}
+    },
+    {
+      "id": "scummvm", "name": "ScummVM", "category": "games",
+      "summary": "Классические квесты", "description": "Monkey Island, Full Throttle, Broken Sword и сотни других квестов. Игры — в папке games/scummvm на карте.",
+      "icon": "icons/scummvm.png", "size_mb": 70,
+      "install": {"type": "apt", "packages": ["scummvm"]},
+      "run": {"mode": "game", "cmd": "scummvm --fullscreen", "input": "gamepad"}
+    },
+    {
+      "id": "dosbox", "name": "DOSBox", "category": "games",
+      "summary": "Игры для DOS", "description": "Эмулятор DOS для старых игр. Игры — в папке games/dos на карте.",
+      "icon": "icons/dosbox.png", "size_mb": 10,
+      "install": {"type": "apt", "packages": ["dosbox"]},
+      "run": {"mode": "game", "cmd": "dosbox -fullscreen /mnt/sdcard/games/dos", "input": "keyboard"}
+    },
+    {
+      "id": "openttd", "name": "OpenTTD", "category": "games",
+      "summary": "Транспортная стратегия", "description": "Свободный ремейк Transport Tycoon Deluxe с открытой графикой.",
+      "icon": "icons/openttd.png", "size_mb": 90,
+      "install": {"type": "apt", "packages": ["openttd", "openttd-opengfx", "openttd-openmsx", "openttd-opensfx"]},
+      "run": {"mode": "game", "cmd": "openttd -f", "input": "mouse"}
+    },
+    {
+      "id": "supertux", "name": "SuperTux", "category": "games",
+      "summary": "Платформер в духе Марио", "description": "Классический платформер с пингвином Таксом.",
+      "icon": "icons/supertux.png", "size_mb": 120,
+      "install": {"type": "apt", "packages": ["supertux"]},
+      "run": {"mode": "game", "cmd": "supertux2 --fullscreen", "input": "gamepad"}
+    },
+    {
+      "id": "frozen-bubble", "name": "Frozen Bubble", "category": "games",
+      "summary": "Пузыри-головоломка", "description": "Стреляй цветными шарами, собирай по три одного цвета.",
+      "icon": "icons/frozen-bubble.png", "size_mb": 30,
+      "install": {"type": "apt", "packages": ["frozen-bubble"]},
+      "run": {"mode": "game", "cmd": "frozen-bubble --fullscreen", "input": "keyboard"}
+    },
+    {
+      "id": "neverball", "name": "Neverball", "category": "games",
+      "summary": "Катай шарик по уровням", "description": "Наклоняй уровень и доводи шарик до финиша, собирая монеты.",
+      "icon": "icons/neverball.png", "size_mb": 60,
+      "install": {"type": "apt", "packages": ["neverball"]},
+      "run": {"mode": "game", "cmd": "neverball", "input": "gamepad"}
+    },
+    {
+      "id": "lbreakout2", "name": "LBreakout2", "category": "games",
+      "summary": "Арканоид", "description": "Разбивай кирпичи мячиком — классика жанра.",
+      "icon": "icons/lbreakout2.png", "size_mb": 10,
+      "install": {"type": "apt", "packages": ["lbreakout2"]},
+      "run": {"mode": "game", "cmd": "lbreakout2 -f", "input": "mouse"}
+    },
+    {
+      "id": "moonlight", "name": "Moonlight", "category": "stream",
+      "summary": "Игры с ПК по сети", "description": "Стриминг игр со Steam/ПК (Sunshine или GeForce Experience на ПК). Консоль — экран и геймпад, игра идёт на ПК. Собирается из исходников (~10 минут).",
+      "icon": "icons/moonlight.png", "size_mb": 15, "status": "beta",
+      "install": {"type": "script", "script": "scripts/moonlight.sh"},
+      "run": {"mode": "game", "cmd": "/mnt/sdcard/nk/apps/moonlight/run.sh", "input": "gamepad"}
+    },
+    {
+      "id": "files", "name": "Файлы", "category": "utils",
+      "summary": "Файловый менеджер", "description": "PCManFM: копировать, переносить и удалять файлы на карте. Стик — курсор.",
+      "icon": "icons/files.png", "size_mb": 30,
+      "install": {"type": "apt", "packages": ["pcmanfm", "cage", "xwayland", "wvkbd"]},
+      "run": {"mode": "kiosk", "cmd": "pcmanfm /mnt/sdcard", "input": "mouse"}
+    },
+    {
+      "id": "terminal", "name": "Терминал", "category": "utils",
+      "summary": "Командная строка Linux", "description": "Терминал foot с экранной клавиатурой. Для тех, кто знает, что делает.",
+      "icon": "icons/terminal.png", "size_mb": 5,
+      "install": {"type": "apt", "packages": ["foot", "cage", "wvkbd", "mc"]},
+      "run": {"mode": "kiosk", "cmd": "foot -F", "input": "keyboard"}
+    },
+    {
+      "id": "reader", "name": "Читалка", "category": "utils",
+      "summary": "PDF, EPUB, комиксы", "description": "MuPDF: книги и комиксы из папки books на карте. ◀▶ — страницы.",
+      "icon": "icons/reader.png", "size_mb": 15,
+      "install": {"type": "apt", "packages": ["mupdf", "cage", "xwayland"]},
+      "run": {"mode": "kiosk", "cmd": "mupdf /mnt/sdcard/books", "input": "keyboard"}
+    },
+    {
+      "id": "photos", "name": "Фото", "category": "utils",
+      "summary": "Просмотр картинок", "description": "feh: фото и картинки из папки photos на карте, листание кнопками.",
+      "icon": "icons/photos.png", "size_mb": 3,
+      "install": {"type": "apt", "packages": ["feh", "cage", "xwayland"]},
+      "run": {"mode": "kiosk", "cmd": "feh -F -Z /mnt/sdcard/photos", "input": "keyboard"}
+    }
+  ]
+}

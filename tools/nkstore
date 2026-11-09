@@ -1,0 +1,99 @@
+#!/bin/bash
+# nkstore — установщик магазина PukiKakiOS (работает внутри Debian на консоли).
+#   nkstore update           скачать каталог и значки
+#   nkstore install <id>     установить приложение
+#   nkstore remove <id>      удалить (пакеты, нужные другим приложениям, остаются)
+#   nkstore installed        список установленных
+# Лаунчер читает строки «@P <проценты> <текст>», в конце «@OK» или «@ERR <текст>».
+# Каталог: https://github.com/SASUN1488/pukikaki-store
+set -o pipefail
+BASE=${NKSTORE_BASE:-https://raw.githubusercontent.com/SASUN1488/pukikaki-store/main}
+STORE=/mnt/sdcard/nk/store
+APPS=/mnt/sdcard/nk/apps
+LOG=/tmp/nkstore.log
+CAT=$STORE/catalog.json
+mkdir -p "$STORE/icons" "$APPS"
+
+p()   { echo "@P $1 $2"; }
+die() { echo "@ERR $*"; exit 1; }
+app() { jq -e --arg id "$1" '.apps[] | select(.id == $id)' "$CAT"; }
+
+cmd_update() {
+  p 5 "Скачиваю каталог…"
+  curl -fsSL --retry 2 -o "$CAT.tmp" "$BASE/catalog.json" || die "Нет связи с магазином"
+  jq -e .apps "$CAT.tmp" >/dev/null || die "Каталог повреждён"
+  mv "$CAT.tmp" "$CAT"
+  n=$(jq '.apps | length' "$CAT"); i=0
+  for icon in $(jq -r '.apps[].icon' "$CAT"); do
+    i=$((i + 1))
+    [ -s "$STORE/$icon" ] || { mkdir -p "$STORE/$(dirname "$icon")"; curl -fsSL -o "$STORE/$icon" "$BASE/$icon" || true; }
+    p $((10 + 90 * i / n)) "Значки $i/$n"
+  done
+  echo "@OK"
+}
+
+# apt с прогрессом: загрузка 0–50 %, установка 50–100 %
+apt_progress() {
+  local what=$1; shift
+  DEBIAN_FRONTEND=noninteractive apt-get -y -o APT::Status-Fd=3 -o Dpkg::Use-Pty=0 "$what" "$@" 3>&1 >>"$LOG" 2>&1 |
+  while IFS=: read -r kind _ pct msg; do
+    pct=${pct%%.*}
+    case $kind in
+      dlstatus) p $((pct / 2)) "Скачиваю: ${msg:0:40}" ;;
+      pmstatus) p $((50 + pct / 2)) "Устанавливаю: ${msg:0:40}" ;;
+    esac
+  done
+}
+
+cmd_install() {
+  local id=$1 a type
+  [ -f "$CAT" ] || cmd_update >/dev/null
+  a=$(app "$id") || die "Нет такого приложения: $id"
+  [ "$(jq -r '.status // ""' <<<"$a")" = soon ] && die "Пока недоступно — скоро"
+  type=$(jq -r .install.type <<<"$a")
+  : >"$LOG"
+  case $type in
+    apt)
+      p 1 "Обновляю список пакетов…"
+      apt-get update >>"$LOG" 2>&1 || die "apt update не удался (интернет?)"
+      apt_progress install $(jq -r '.install.packages[]' <<<"$a") || die "Ошибка установки (см. $LOG)" ;;
+    script)
+      local s; s=$(jq -r .install.script <<<"$a")
+      p 2 "Скачиваю установщик…"
+      curl -fsSL -o /tmp/nkstore-script.sh "$BASE/$s" || die "Не скачать скрипт"
+      APPDIR="$APPS/$id" bash /tmp/nkstore-script.sh install || die "Ошибка установки (см. $LOG)" ;;
+    *) die "Неизвестный способ установки: $type" ;;
+  esac
+  mkdir -p "$APPS/$id"
+  jq '. + {installed: now | todate}' <<<"$a" >"$APPS/$id/app.json"
+  icon=$(jq -r .icon <<<"$a"); [ -s "$STORE/$icon" ] && cp "$STORE/$icon" "$APPS/$id/icon.png"
+  p 100 "Готово"
+  echo "@OK"
+}
+
+cmd_remove() {
+  local id=$1 m="$APPS/$1/app.json"
+  [ -f "$m" ] || die "Не установлено: $id"
+  if [ "$(jq -r .install.type "$m")" = apt ]; then
+    # пакеты этого приложения минус те, что нужны другим установленным
+    mine=$(jq -r '.install.packages[]' "$m" | sort -u)
+    others=$(for o in "$APPS"/*/app.json; do [ "$o" = "$m" ] && continue; jq -r 'select(.install.type=="apt") | .install.packages[]' "$o" 2>/dev/null; done | sort -u)
+    del=$(comm -23 <(echo "$mine") <(echo "$others"))
+    p 20 "Удаляю пакеты…"
+    [ -n "$del" ] && { DEBIAN_FRONTEND=noninteractive apt-get -y remove $del >>"$LOG" 2>&1; apt-get -y autoremove >>"$LOG" 2>&1; }
+  else
+    p 20 "Удаляю файлы…"
+    [ -f "$APPS/$id/uninstall.sh" ] && bash "$APPS/$id/uninstall.sh" >>"$LOG" 2>&1
+  fi
+  rm -rf "${APPS:?}/$id"
+  p 100 "Удалено"
+  echo "@OK"
+}
+
+case $1 in
+  update) cmd_update ;;
+  install) [ -n "$2" ] || die "нужен id"; cmd_install "$2" ;;
+  remove) [ -n "$2" ] || die "нужен id"; cmd_remove "$2" ;;
+  installed) for m in "$APPS"/*/app.json; do [ -f "$m" ] && jq -r '"\(.id)\t\(.name)"' "$m"; done ;;
+  *) sed -n '2,8p' "$0" ;;
+esac
