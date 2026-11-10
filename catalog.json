@@ -12,7 +12,7 @@
       "id": "firefox", "name": "Firefox", "category": "fun",
       "summary": "Браузер", "description": "Firefox ESR на весь экран. Стик — курсор, A — клик, Select — экранная клавиатура. Тяжёлые сайты будут медленными.",
       "icon": "icons/firefox.png", "size_mb": 260,
-      "install": {"type": "apt", "packages": ["firefox-esr", "cage", "wvkbd", "fonts-dejavu-core"]},
+      "install": {"type": "apt", "packages": ["firefox-esr", "labwc", "xcursor-themes", "wvkbd", "fonts-dejavu-core"]},
       "run": {"mode": "kiosk", "cmd": "firefox-esr --kiosk https://ya.ru", "input": "mouse"}
     },
     {
@@ -96,28 +96,28 @@
       "id": "files", "name": "Файлы", "category": "utils",
       "summary": "Файловый менеджер", "description": "PCManFM: копировать, переносить и удалять файлы на карте. Стик — курсор.",
       "icon": "icons/files.png", "size_mb": 30,
-      "install": {"type": "apt", "packages": ["pcmanfm", "cage", "xwayland", "wvkbd"]},
+      "install": {"type": "apt", "packages": ["pcmanfm", "labwc", "xcursor-themes", "wvkbd"]},
       "run": {"mode": "kiosk", "cmd": "pcmanfm /mnt/sdcard", "input": "mouse"}
     },
     {
       "id": "terminal", "name": "Терминал", "category": "utils",
       "summary": "Командная строка Linux", "description": "Терминал foot с экранной клавиатурой. Для тех, кто знает, что делает.",
       "icon": "icons/terminal.png", "size_mb": 5,
-      "install": {"type": "apt", "packages": ["foot", "cage", "wvkbd", "mc"]},
+      "install": {"type": "apt", "packages": ["foot", "labwc", "xcursor-themes", "wvkbd", "mc"]},
       "run": {"mode": "kiosk", "cmd": "foot -F", "input": "keyboard"}
     },
     {
       "id": "reader", "name": "Читалка", "category": "utils",
       "summary": "PDF, EPUB, комиксы", "description": "MuPDF: книги и комиксы из папки books на карте. ◀▶ — страницы.",
       "icon": "icons/reader.png", "size_mb": 15,
-      "install": {"type": "apt", "packages": ["mupdf", "cage", "xwayland"]},
+      "install": {"type": "apt", "packages": ["mupdf", "labwc", "xcursor-themes", "xwayland"]},
       "run": {"mode": "kiosk", "cmd": "mupdf /mnt/sdcard/books", "input": "keyboard"}
     },
     {
       "id": "photos", "name": "Фото", "category": "utils",
       "summary": "Просмотр картинок", "description": "feh: фото и картинки из папки photos на карте, листание кнопками.",
       "icon": "icons/photos.png", "size_mb": 3,
-      "install": {"type": "apt", "packages": ["feh", "cage", "xwayland"]},
+      "install": {"type": "apt", "packages": ["feh", "labwc", "xcursor-themes", "xwayland"]},
       "run": {"mode": "kiosk", "cmd": "feh -F -Z /mnt/sdcard/photos", "input": "keyboard"}
     }
   ]
