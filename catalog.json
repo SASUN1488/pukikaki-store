@@ -62,7 +62,7 @@
       "summary": "Платформер в духе Марио", "description": "Классический платформер с пингвином Таксом.",
       "icon": "icons/supertux.png", "size_mb": 120,
       "install": {"type": "apt", "packages": ["supertux"]},
-      "run": {"mode": "game", "cmd": "supertux2 --fullscreen", "input": "gamepad"}
+      "run": {"mode": "game", "cmd": "supertux2 --renderer sdl -f -g 480x272 -a 480:272", "input": "gamepad"}
     },
     {
       "id": "frozen-bubble", "name": "Frozen Bubble", "category": "games",

@@ -56,7 +56,7 @@ cmd_install() {
     apt)
       p 1 "Обновляю список пакетов…"
       apt-get update >>"$LOG" 2>&1 || die "apt update не удался (интернет?)"
-      apt_progress install $(jq -r '.install.packages[]' <<<"$a") || die "Ошибка установки (см. $LOG)" ;;
+      apt_progress install --no-install-recommends $(jq -r '.install.packages[]' <<<"$a") || die "Ошибка установки (см. $LOG)" ;;
     script)
       local s; s=$(jq -r .install.script <<<"$a")
       p 2 "Скачиваю установщик…"
