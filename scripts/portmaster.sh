@@ -1,5 +1,6 @@
 #!/bin/bash
-# PortMaster: каталог портов игр для ARM-приставок (бета: интеграция с оболочкой ещё дорабатывается)
+# PortMaster: каталог портов игр для ARM-приставок. Ставится в /roms/ports (в образе Debian), окно — через gl4es.
+# Установленные порты оболочка показывает обложками в «Играх» (читает /roms/ports/*/port.json).
 set -e
 p() { echo "@P $1 $2"; }
 [ "$1" = install ] || exit 0
@@ -10,9 +11,6 @@ p 40 "Скачиваю PortMaster…"
 URL=$(curl -fsSL https://api.github.com/repos/PortsMaster/PortMaster-GUI/releases/latest | grep -o '"browser_download_url": *"[^"]*PortMaster.zip"' | cut -d'"' -f4)
 curl -fsSL -o /tmp/PortMaster.zip "$URL"
 p 80 "Распаковываю…"
-mkdir -p "$APPDIR" && unzip -q -o /tmp/PortMaster.zip -d "$APPDIR" && rm /tmp/PortMaster.zip
-cat > "$APPDIR/run.sh" <<'RUN'
-#!/bin/sh
-cd /mnt/sdcard/nk/apps/portmaster/PortMaster && exec ./PortMaster.sh
-RUN
-chmod +x "$APPDIR/run.sh"
+# порты — внутри образа Debian (ext4): на карте exFAT нет символьных ссылок и прав, а порты ими пользуются
+mkdir -p /roms/ports && unzip -q -o /tmp/PortMaster.zip -d /roms/ports && rm /tmp/PortMaster.zip
+mkdir -p "$APPDIR"

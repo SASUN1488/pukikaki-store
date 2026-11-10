@@ -34,7 +34,7 @@
       "summary": "Сотни портов игр для приставок", "description": "Каталог готовых портов игр под ARM-приставки (многие поддерживают RK3566). Часть игр требует файлы оригинала.",
       "icon": "icons/portmaster.png", "size_mb": 60, "status": "beta",
       "install": {"type": "script", "script": "scripts/portmaster.sh"},
-      "run": {"mode": "game", "cmd": "/mnt/sdcard/nk/apps/portmaster/run.sh", "input": "gamepad"}
+      "run": {"mode": "game", "cmd": "gl4es bash /roms/ports/PortMaster/PortMaster.sh", "input": "gamepad"}
     },
     {
       "id": "scummvm", "name": "ScummVM", "category": "games",
